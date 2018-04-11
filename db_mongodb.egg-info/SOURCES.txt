@@ -1,9 +1,0 @@
-README.md
-setup.py
-db_mongodb/__init__.py
-db_mongodb/db_mongodb.py
-db_mongodb.egg-info/PKG-INFO
-db_mongodb.egg-info/SOURCES.txt
-db_mongodb.egg-info/dependency_links.txt
-db_mongodb.egg-info/not-zip-safe
-db_mongodb.egg-info/top_level.txt

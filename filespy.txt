@@ -1,9 +1,0 @@
-/home/altman.ro/.local/lib/python2.7/site-packages/db_mongodb-1.0-py2.7.egg/db_mongodb/db_mongodb.pyc
-/home/altman.ro/.local/lib/python2.7/site-packages/db_mongodb-1.0-py2.7.egg/db_mongodb/db_mongodb.py
-/home/altman.ro/.local/lib/python2.7/site-packages/db_mongodb-1.0-py2.7.egg/db_mongodb/__init__.py
-/home/altman.ro/.local/lib/python2.7/site-packages/db_mongodb-1.0-py2.7.egg/db_mongodb/__init__.pyc
-/home/altman.ro/.local/lib/python2.7/site-packages/db_mongodb-1.0-py2.7.egg/EGG-INFO/not-zip-safe
-/home/altman.ro/.local/lib/python2.7/site-packages/db_mongodb-1.0-py2.7.egg/EGG-INFO/SOURCES.txt
-/home/altman.ro/.local/lib/python2.7/site-packages/db_mongodb-1.0-py2.7.egg/EGG-INFO/top_level.txt
-/home/altman.ro/.local/lib/python2.7/site-packages/db_mongodb-1.0-py2.7.egg/EGG-INFO/dependency_links.txt
-/home/altman.ro/.local/lib/python2.7/site-packages/db_mongodb-1.0-py2.7.egg/EGG-INFO/PKG-INFO
