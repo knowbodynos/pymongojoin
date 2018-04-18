@@ -1,23 +1,23 @@
-# db_mongodb
+# pymongojoin
 A Python package based on PyMongo that joins collections with shared indexes.
 
 ------------------------------------------------------------------------------------------------------------
 
 Installation instructions:
 
-1) Download the `db_mongodb` package
+1) Download the `pymongojoin` package
 
 ```
-   git clone https://github.com/knowbodynos/db_mongodb.git
+   git clone https://github.com/knowbodynos/pymongojoin.git
 ```
 
 2) Navigate into the main directory
 
 ```
-   cd db_mongodb
+   cd pymongojoin
 ```
 
-3) Install `db_mongodb`
+3) Install `pymongojoin`
 
 ```
    python setup.py install
@@ -25,12 +25,12 @@ Installation instructions:
 
 ------------------------------------------------------------------------------------------------------------
 
-Using `db_mongodb`:
+Using `pymongojoin`:
 
 1) Create collections, as you would in PyMongo:
 
 ```
-   client = db_mongodb.dbClient(<MONGO_URI>)
+   client = pymongojoin.dbClient(<MONGO_URI>)
    database = client.<MONGO_DATABASE_NAME>
    collection_1 = database.<MONGO_COLLECTION_1>
    collection_2 = database.<MONGO_COLLECTION_1>

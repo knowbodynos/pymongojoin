@@ -1,44 +1,39 @@
-from pymongo.mongo_client import MongoClient
-from pymongo.database import Database
-from pymongo.collection import Collection
-from pymongo.errors import DocumentTooLarge, BulkWriteError
-from pymongo.cursor import CursorType
-from pymongo import ASCENDING, DESCENDING, WriteConcern, UpdateOne, InsertOne
+from pymongo import * 
 
-class dbClient(MongoClient):
+class JoinedClient(mongo_client.MongoClient):
     def __init__(self, mongo_uri):
         super(self.__class__, self).__init__(mongo_uri)
 
     def __getattr__(self, key):
         if key not in self.__dict__:
-            return dbDatabase(self, key)
+            return JoinedDatabase(self, key)
         else:
             return self.__dict__[key]
 
     def __getitem__(self, key):
         if key not in self.__dict__:
-            return dbDatabase(self, key)
+            return JoinedDatabase(self, key)
         else:
             return self.__dict__[key]
 
-class dbDatabase(Database):
+class JoinedDatabase(database.Database):
     def __init__(self, client, database_name):
         super(self.__class__, self).__init__(client, database_name)
 
     def __getattr__(self, key):
         if key not in self.__dict__:
-            return dbCollections(self, key)
+            return JoinedCollections(self, key)
         else:
             return self.__dict__[key]
 
     def __getitem__(self, key):
         if key not in self.__dict__:
-            return dbCollections(self, key)
+            return JoinedCollections(self, key)
         else:
             return self.__dict__[key]
 
-class dbCollections(object):
-    class dbCollection(Collection):
+class JoinedCollections(object):
+    class JoinedCollection(collection.Collection):
         def get_indexes(self):
             database = self._Collection__database
             collection_name = self._Collection__name
@@ -56,9 +51,9 @@ class dbCollections(object):
 
             self.__sort = None
             
-            for k, v in kwargs["dbCollections"].items():
+            for k, v in kwargs["JoinedCollections"].items():
                 self.__dict__[k] = v
-            del kwargs["dbCollections"]
+            del kwargs["JoinedCollections"]
 
             args = list(args)
             if len(args) > 0:
@@ -85,7 +80,7 @@ class dbCollections(object):
             self.__find_kwargs = kwargs
 
             self.__collection_info = {}
-            for collection_name in self._dbCollections__seq:
+            for collection_name in self._JoinedCollections__seq:
                 collection = self.__dict__[collection_name]
                 sample_doc = list(collection.find(None, None, *self.__find_args, **kwargs).limit(1))[0]
                 collection_fields = sample_doc.keys()
@@ -113,8 +108,8 @@ class dbCollections(object):
             return project_doc
 
         def __recursive_find(self, level, super_doc):
-            if level < len(self._dbCollections__seq):
-                collection_name = self._dbCollections__seq[level]
+            if level < len(self._JoinedCollections__seq):
+                collection_name = self._JoinedCollections__seq[level]
                 collection = self.__dict__[collection_name]
                 indexes = self.__collection_info[collection_name]["indexes"]
 
@@ -219,11 +214,11 @@ class dbCollections(object):
     def __init__(self, database = None, collection_name = None):
         self.__seq = []
         if database and collection_name:
-            self.__dict__[collection_name] = self.dbCollection(database, collection_name)
+            self.__dict__[collection_name] = self.JoinedCollection(database, collection_name)
             self.__seq.append(collection_name)
 
     def join(self, db_collections):
-        assert(isinstance(db_collections, dbCollections))
+        assert(isinstance(db_collections, JoinedCollections))
         for collection_name in db_collections.__seq:
             self.__dict__[collection_name] = db_collections.__dict__[collection_name]
             self.__seq.append(collection_name)
@@ -254,5 +249,5 @@ class dbCollections(object):
             collection = self.__dict__[collection_name]
             return collection.find(*args, **kwargs)
         else:
-            kwargs.update({"dbCollections": self.__dict__})
+            kwargs.update({"JoinedCollections": self.__dict__})
             return self.dbCursor(*args, **kwargs)
