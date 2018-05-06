@@ -40,7 +40,7 @@ class JoinedCollections(object):
             curs = database.INDEXES.find({"TIER": collection_name}, {"_id": 0, "INDEX": 1, "INDEXID": 1}).sort([("INDEXID", 1)])
             return [x["INDEX"] for x in list(curs)]
 
-    class dbCursor(object):
+    class JoinedCursor(object):
         def __init__(self, *args, **kwargs):
             self.__hint = None
 
@@ -250,4 +250,4 @@ class JoinedCollections(object):
             return collection.find(*args, **kwargs)
         else:
             kwargs.update({"JoinedCollections": self.__dict__})
-            return self.dbCursor(*args, **kwargs)
+            return self.JoinedCursor(*args, **kwargs)
