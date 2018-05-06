@@ -84,17 +84,29 @@ class JoinedCollections(object):
                 collection = self.__dict__[collection_name]
                 sample_doc = list(collection.find(None, None, *self.__find_args, **kwargs).limit(1))[0]
                 collection_fields = sample_doc.keys()
-                collection_query = {}
+                collection_filter = {}
                 collection_projection = {}
-                for field in collection_fields:
-                    if field in self.__find_filter:
-                        collection_query[field] = self.__find_filter[field]
-                    if field in self.__find_projection:
-                        collection_projection[field] = self.__find_projection[field]
+                #for field in collection_fields:
+                #    if field in self.__find_filter:
+                #        collection_filter[field] = self.__find_filter[field]
+                #    if field in self.__find_projection:
+                #        collection_projection[field] = self.__find_projection[field]
+                for field in self.__find_filter:
+                    if field[:len(collection_name) + 1] == collection_name + '.':
+                        new_field = field[len(collection_name) + 1:]
+                        self.__find_filter[new_field] = self.__find_filter.pop(field)
+                        collection_filter[new_field] = self.__find_filter[new_field]
+
+                for field in self.__find_projection:
+                    if field[:len(collection_name) + 1] == collection_name + '.':
+                        new_field = field[len(collection_name) + 1:]
+                        self.__find_projection[new_field] = self.__find_projection.pop(field)
+                        collection_projection[new_field] = self.__find_projection[new_field]
+
                 self.__collection_info[collection_name] = {
                                                        "fields": collection_fields,
                                                        "indexes": collection.get_indexes(),
-                                                       "filter": collection_query,
+                                                       "filter": collection_filter,
                                                        "projection": collection_projection
                                                    }
 
@@ -142,9 +154,10 @@ class JoinedCollections(object):
                             sort_items.append((field, val))
                     cursor.sort(sort_items)
                 
-                if cursor.count() == 0:
-                    yield self.__project_doc(super_doc)
-                else:
+                #if cursor.count() == 0:
+                #    yield self.__project_doc(super_doc)
+                #else:
+                if cursor.count() > 0:
                     for doc in cursor:
                         doc.update(super_doc)
                         for sub_doc in self.__recursive_find(level + 1, doc):
