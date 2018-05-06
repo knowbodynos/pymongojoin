@@ -1,1 +1,1 @@
-from pymongojoin import *
+from .pymongojoin import *
