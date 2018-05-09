@@ -145,14 +145,16 @@ class JoinedCollections(object):
                     for field, val in self.__hint:
                         if field in self.__collection_info[collection_name]["filter"]:
                             hint_items.append((field, val))
-                    cursor.hint(hint_items)
+                    if len(hint_items) > 0:
+                        cursor.hint(hint_items)
 
                 if self.__sort:
                     sort_items = []
                     for field, val in self.__sort:
                         if field in self.__collection_info[collection_name]["fields"]:
                             sort_items.append((field, val))
-                    cursor.sort(sort_items)
+                    if len(sort_items) > 0:
+                        cursor.sort(sort_items)
                 
                 #if cursor.count() == 0:
                 #    yield self.__project_doc(super_doc)
