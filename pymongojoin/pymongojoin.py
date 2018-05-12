@@ -83,7 +83,7 @@ class JoinedCollections(object):
             for collection_name in self._JoinedCollections__seq:
                 collection = self.__dict__[collection_name]
                 sample_doc = list(collection.find(None, None, *self.__find_args, **kwargs).limit(1))[0]
-                collection_fields = sample_doc.keys()
+                collection_fields = list(sample_doc.keys())
                 collection_filter = {}
                 collection_projection = {}
                 #for field in collection_fields:
@@ -91,13 +91,13 @@ class JoinedCollections(object):
                 #        collection_filter[field] = self.__find_filter[field]
                 #    if field in self.__find_projection:
                 #        collection_projection[field] = self.__find_projection[field]
-                for field in self.__find_filter:
+                for field in list(self.__find_filter.keys()):
                     if field[:len(collection_name) + 1] == collection_name + '.':
                         new_field = field[len(collection_name) + 1:]
                         self.__find_filter[new_field] = self.__find_filter.pop(field)
                         collection_filter[new_field] = self.__find_filter[new_field]
 
-                for field in self.__find_projection:
+                for field in list(self.__find_projection.keys()):
                     if field[:len(collection_name) + 1] == collection_name + '.':
                         new_field = field[len(collection_name) + 1:]
                         self.__find_projection[new_field] = self.__find_projection.pop(field)
@@ -180,13 +180,24 @@ class JoinedCollections(object):
                 self.retrieved += 1
                 yield next_doc
 
-        def next(self):
+        # def next(self):
+        #     while self.__counter < self.__skip:
+        #         self.__cursor.next()
+        #         self.__counter += 1
+        #     if self.__limit > 0 and self.retrieved >= self.__limit:
+        #         raise StopIteration
+        #     next_doc = self.__cursor.next()
+        #     self.__counter += 1
+        #     self.retrieved += 1
+        #     return next_doc
+
+        def __next__(self):
             while self.__counter < self.__skip:
-                self.__cursor.next()
+                next(self.__cursor)
                 self.__counter += 1
             if self.__limit > 0 and self.retrieved >= self.__limit:
                 raise StopIteration
-            next_doc = self.__cursor.next()
+            next_doc = next(self.__cursor)
             self.__counter += 1
             self.retrieved += 1
             return next_doc
