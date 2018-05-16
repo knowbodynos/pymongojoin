@@ -172,17 +172,21 @@ class JoinedCollections(object):
                 yield self.__project_doc(super_doc)
 
         def __iter__(self):
-            for doc in self.__cursor:
-                if self.__counter >= self.__skip:
-                    break
-                self.__counter += 1
-            for doc in self.__cursor:
-                if self.__limit > 0 and self.retrieved >= self.__limit:
-                    raise StopIteration
-                next_doc = doc
-                self.__counter += 1
-                self.retrieved += 1
-                yield next_doc
+            if self.__skip > 0:
+                for doc in self.__cursor:
+                    self.__counter += 1
+                    if self.__counter >= self.__skip:
+                        break
+            if self.__limit == 0 or (self.__limit > 0 and self.retrieved < self.__limit):
+                for doc in self.__cursor:
+                    self.__counter += 1
+                    self.retrieved += 1
+                    if self.__limit > 0 and self.retrieved >= self.__limit:
+                        raise StopIteration
+                    next_doc = doc
+                    yield next_doc
+            else:
+                raise StopIteration
 
         # def next(self):
         #     while self.__counter < self.__skip:
