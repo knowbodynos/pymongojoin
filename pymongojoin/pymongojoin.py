@@ -112,7 +112,7 @@ class JoinedCollections(object):
 
             self.__cursor = self.__recursive_find(0, {})
 
-            print(self.__find_projection)
+            #print(self.__find_projection)
 
         def __project_doc(self, doc):
             project_doc = {}
