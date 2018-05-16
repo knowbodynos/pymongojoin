@@ -112,6 +112,8 @@ class JoinedCollections(object):
 
             self.__cursor = self.__recursive_find(0, {})
 
+            print(self.__find_projection)
+
         def __project_doc(self, doc):
             project_doc = {}
             for field in doc:
@@ -163,8 +165,10 @@ class JoinedCollections(object):
                     for doc in cursor:
                         doc.update(super_doc)
                         for sub_doc in self.__recursive_find(level + 1, doc):
+                            # print("b:" + str(sub_doc))
                             yield self.__project_doc(sub_doc)
             else:
+                # print("b:" + str(super_doc) + " " + str(self.__project_doc(super_doc)))
                 yield self.__project_doc(super_doc)
 
         def __iter__(self):
@@ -235,6 +239,7 @@ class JoinedCollections(object):
                 if with_limit_and_skip and self.__limit > 0 and self.__counter >= self.__limit:
                     break
                 total_count += 1
+            self.rewind()
             return total_count
 
     def __init__(self, database = None, collection_name = None):
