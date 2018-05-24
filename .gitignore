@@ -11,3 +11,4 @@ dist
 build
 **/*_bkp*
 **/*.pyc
+**/__pycache__
